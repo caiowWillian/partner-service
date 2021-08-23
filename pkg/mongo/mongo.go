@@ -8,8 +8,6 @@ import (
 )
 
 type Repository interface {
-	Insert(operation MongoOperation, value interface{}) error
-
 	GetCollection(operation MongoOperation) *mongo.Collection
 }
 
@@ -37,11 +35,6 @@ func init() {
 	client, err := mongo.Connect(context.TODO(), options)
 
 	repo = &repository{client, err}
-}
-
-func (repo *repository) Insert(operation MongoOperation, value interface{}) error {
-	_, err := repo.db.Database(operation.Database).Collection(operation.Collection).InsertOne(context.TODO(), value)
-	return err
 }
 
 func (repo *repository) GetCollection(operation MongoOperation) *mongo.Collection {
