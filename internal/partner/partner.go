@@ -1,4 +1,4 @@
-package models
+package partner
 
 type Partner struct {
 	ID           string `json:"id" bson:"id"`

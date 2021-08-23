@@ -4,28 +4,20 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/caiowWillian/partner-service/models"
-	"github.com/caiowWillian/partner-service/repository/mongo"
-	"go.mongodb.org/mongo-driver/bson"
+	"github.com/caiowWillian/partner-service/internal/partner"
+	models "github.com/caiowWillian/partner-service/internal/partner"
+	"github.com/caiowWillian/partner-service/pkg/mongo"
 )
 
 func main() {
-
-	var partners []models.Partner
-
-	op1 := mongo.MongoOperation{
-		Database:   "test",
-		Collection: "partner",
-	}
-
 	//search by id
-	query := bson.D{{"id", "2"}}
-	mongo.Repo().Get(op1, query, &partners)
+	//query := bson.D{{"id", "2"}}
+	//mongo.Repo().Get(op1, query, &partners)
 
 	var p models.Partner
 
 	strJson := `{
-		"id": 1002,
+		"id": "1004",
 		"tradingName": "Adega Osasco",
 		"ownerName": "Ze da Ambev",
 		"document": "02.453.716/000170",
@@ -160,41 +152,8 @@ func main() {
 	 }`
 	json.Unmarshal([]byte(strJson), &p)
 
-	//mongo.Repo().Insert(op, p)
+	partner.NewRepository(mongo.Repo()).CreatePartner(p)
+	result, _ := partner.NewRepository(mongo.Repo()).GetNearPartner([]float32{-43.3636, -22.99351})
+	fmt.Println(result)
 
-	queryM := bson.M{
-		"$and": []bson.M{
-			{
-				"coverageArea": bson.M{
-					"$geoIntersects": bson.M{
-						"$geometry": bson.M{
-							"type":        "Point",
-							"coordinates": []float64{-43.3636, -22.99351},
-						},
-					},
-				},
-			},
-			{
-				"address": bson.M{
-					"$near": bson.M{
-						"$geometry": bson.M{
-							"type":        "Point",
-							"coordinates": []float64{-43.3636, -22.99351},
-						},
-					},
-				},
-			},
-		},
-	}
-
-	//mongo.Repo().GetAll(op1, &partners)
-	mongo.Repo().Get(op1, queryM, &partners)
-
-	fmt.Println("=========================================")
-	for _, element := range partners {
-
-		fmt.Println(element)
-		fmt.Println("=========================================")
-
-	}
 }

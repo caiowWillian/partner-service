@@ -3,16 +3,14 @@ package mongo
 import (
 	"context"
 
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type Repository interface {
 	Insert(operation MongoOperation, value interface{}) error
-	Ping() error
-	GetAll(operation MongoOperation, data interface{}) error
-	Get(operatation MongoOperation, query interface{}, data interface{}) error
+
+	GetCollection(operation MongoOperation) *mongo.Collection
 }
 
 type MongoOperation struct {
@@ -46,36 +44,8 @@ func (repo *repository) Insert(operation MongoOperation, value interface{}) erro
 	return err
 }
 
-func (repo *repository) Ping() error {
-	err := repo.db.Ping(context.TODO(), nil)
-
-	return err
-}
-
-func (repo *repository) GetAll(operation MongoOperation, data interface{}) error {
-	cursor, err := repo.db.Database(operation.Database).Collection(operation.Collection).Find(context.Background(), bson.D{})
-	if err != nil {
-		return err
-	}
-	cursor.All(context.Background(), data)
-
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (repo *repository) Get(operation MongoOperation, query interface{}, data interface{}) error {
-	cursor, err := repo.db.Database(operation.Database).Collection(operation.Collection).Find(context.Background(), query)
-	if err != nil {
-		return err
-	}
-	cursor.All(context.Background(), data)
-	if err != nil {
-		return err
-	}
-	return nil
-
+func (repo *repository) GetCollection(operation MongoOperation) *mongo.Collection {
+	return (repo.db.Database(operation.Database)).Collection(operation.Collection)
 }
 
 func Repo() Repository {
