@@ -17,3 +17,7 @@ see below how to run the solution locally and by docker image
 3. add the environment variable to your local system ``mongo_uri`` ex: ``mongodb://localhost:27017/teste``
 
 4. access ``./cmd/``and run ``go run main.go``
+
+#### Docker
+
+RUN ``docker run -d -p 5555:5555 -e mongo_uri=mongodb://host.docker.internal:27017/teste caiowillian/partner-service``
