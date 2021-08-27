@@ -2,6 +2,7 @@ package mongo
 
 import (
 	"context"
+	"os"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -24,14 +25,14 @@ type repository struct {
 var repo Repository
 
 func NewMongo() Repository {
-	options := options.Client().ApplyURI("mongodb://localhost:27017/teste")
+	options := options.Client().ApplyURI(os.Getenv("mongo_uri"))
 	client, err := mongo.Connect(context.TODO(), options)
 	return &repository{client, err}
 }
 
 func init() {
 
-	options := options.Client().ApplyURI("mongodb://localhost:27017/teste")
+	options := options.Client().ApplyURI(os.Getenv("mongo_uri"))
 	client, err := mongo.Connect(context.TODO(), options)
 
 	repo = &repository{client, err}
