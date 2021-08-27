@@ -1,0 +1,25 @@
+version: '3.1'
+
+networks:
+  partner-service-network:
+    name: partner-service-network
+    driver: bridge
+
+services:
+ 
+  mongo:
+    image: 'mongo'
+    networks:
+      - partner-service-network
+
+  partner-service:
+    depends_on: 
+      - mongo
+    image: 'caiowillian/partner-service'
+    networks:
+      - partner-service-network
+    ports:
+      - '5555:5555'
+    environment:
+      - mongo_uri=mongodb://mongo:27017/teste
+
