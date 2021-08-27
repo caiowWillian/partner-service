@@ -67,6 +67,8 @@ func main() {
 	}()
 
 	go func() {
+		fmt.Println("==============")
+		fmt.Println(os.Getenv("mongo_uri"))
 		configureMongoDb()
 		address := fmt.Sprintf(":%d", port)
 		r := mux.NewRouter()
