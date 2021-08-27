@@ -9,7 +9,7 @@
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "/Users/caio/Desktop/git/partner-service/main.go"
+            "program": "/Users/caio/Desktop/git/partner-service/cmd/main.go"
         }
     ]
 }

@@ -23,7 +23,7 @@ type repository struct {
 
 var repo Repository
 
-func newMongo() Repository {
+func NewMongo() Repository {
 	options := options.Client().ApplyURI("mongodb://localhost:27017/teste")
 	client, err := mongo.Connect(context.TODO(), options)
 	return &repository{client, err}
